@@ -1,4 +1,7 @@
 class puppet::client {
+  # Ensure the puppetlabs repo is installed
+  class {'puppet::repo': }
+  
   # This is redundant, because you can't run this without puppet...
   package { 'puppet':
     ensure => installed,
