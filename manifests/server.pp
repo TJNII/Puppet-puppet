@@ -1,39 +1,19 @@
 class puppet::server( $manage_firewall = true ) {
-  class {'puppet::repo': }
+  class {'puppet::common': }
   
   case $operatingsystem {
     centos, redhat: {
-      package { ['puppet', 'puppet-server', 'puppetdb']:
+      package { ['puppet-server', 'puppetdb']:
 	ensure  => installed,
 	require => [File['/etc/yum.repos.d/puppetlabs.repo'], File['/etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs']]
       }
 
-      service { 'puppet':
-	name      => 'puppet',
-	ensure    => running,
-	enable    => true,
-	subscribe => File['/etc/puppet/puppet.conf'],
-      }
-      
     }
     debian: {
-      package { ['puppet', 'puppetmaster', 'puppetdb', 'puppetdb-terminus', 'puppet-el', 'ruby-elisp']:
+      package { ['puppetmaster', 'puppetdb', 'puppetdb-terminus', 'puppet-el', 'ruby-elisp']:
 	ensure  => installed,
       }
-      
-      service { 'puppet':
-	name      => 'puppet',
-	ensure    => running,
-	enable    => true,
-	subscribe => [File['/etc/puppet/puppet.conf'], File['/etc/default/puppet']],
-      }
-      
-      file { '/etc/default/puppet':
-	path    => '/etc/default/puppet',
-	ensure  => file,
-	require => Package['puppet'],
-	source  => "puppet:///modules/puppet/puppet.defaults.debian",
-      }
+
     }
   }
   
