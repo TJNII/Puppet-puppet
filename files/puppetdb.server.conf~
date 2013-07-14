@@ -1,3 +1,0 @@
-[main]
-   server = puppetmaster.bastions.cp.local
-   port = 8081
