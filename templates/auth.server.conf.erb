@@ -1,3 +1,7 @@
+#
+# PUPPET MANAGED: DO NOT EDIT
+#
+
 # This is the default auth.conf file, which implements the default rules
 # used by the puppet master. (That is, the rules below will still apply
 # even if this file is deleted.)
@@ -114,7 +118,7 @@ allow *
 path /facts
 auth any
 method find, search
-allow puppetmaster.tjnii.com
+allow <%= fqdn %>
 
 # deny everything else; this ACL is not strictly necessary, but
 # illustrates the default policy.

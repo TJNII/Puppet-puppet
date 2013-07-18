@@ -123,7 +123,7 @@ class puppet::server(
       path    => '/etc/puppet/auth.conf',
       ensure  => file,
       require => Package['puppet'],
-      source  => "puppet:///modules/puppet/auth.server.conf",
+      content => template("puppet/auth.server.conf.erb"),
     }
     
     service { 'puppetmaster':
