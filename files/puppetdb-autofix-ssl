@@ -1,0 +1,89 @@
+#!/bin/bash
+# fix_puppetdb_cert.sh: Check if puppetdb cert matches the master FQDN ($1) and, if not, fix it.
+#
+# ARGUMENTS:
+# $1: Proper CA FQDN (Required)
+# $2: puppetdb ssl port (Default: 8081)
+#
+# 2013 TJNII
+
+TIMEOUT_DELAY=120
+
+function verify_listener {
+    for((c=0;$c<$TIMEOUT_DELAY;c++)); do
+	sleep 1
+	if [ -n "`netstat -lnp | grep $puppetdb_port`" ]; then
+	    return 0
+	fi
+    done
+
+    echo "ERROR: PuppetDB failed to listen after $TIMEOUT_DELAY seconds"
+    exit 1
+}    
+
+if [ -z "$1" ]; then
+    echo "ERROR: CA FQDN (Argument 1) required"
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    puppetdb_port=8081
+else
+    puppetdb_port=$2
+fi
+
+# Allow time for startup on 1st run
+verify_listener
+
+# Determine puppetdb interface
+puppetdb_iface=`netstat -lnp | grep $puppetdb_port | awk '{print $4}'`
+if [ -z "$puppetdb_iface" ]; then
+    echo "ERROR: Unable to determine puppetdb interface from netstat. (Port: $puppetdb_port)"
+    exit 1
+fi
+
+# Determine CA
+issuer=`openssl s_client -connect $puppetdb_iface 2>/dev/null | grep "issuer.*Puppet CA:" | sed -e 's|.*[[:space:]]\([^[:space:]]\+\)[[:space:]]*$|\1|'`
+
+if [ -z "$issuer" ]; then
+    echo "ERROR: Could not determine issuer for puppetdb"
+    exit 1
+fi
+
+if [ "$issuer" == "$1" ]; then
+    echo "CA OK: $issuer : $1"
+    exit 0
+fi
+
+echo "CA MISMATCH: $issuer : $1"
+echo "Rebuilding"
+
+/etc/init.d/puppetdb stop
+
+if [ -n "`ps awwux | grep "java.*puppetdb.jar" | grep -v grep`" ]; then
+    echo "ERROR: Puppetdb processes found after stop"
+    exit 1
+fi
+
+rm -f /etc/puppetdb/ssl/*
+
+# puppetdb-ssl-setup will use the wrong values in auto mode when a custom puppet master dir is used
+# However, this command can be fed values via /usr/sbin/puppetdb-ssl-setup-answers.txt (yea, /usr/sbin...)
+# puppetdb-ssl-setup-answers.txt is expected to exist.   (Puppet managed.)
+if [ ! -f /usr/sbin/puppetdb-ssl-setup-answers.txt ]; then
+    echo "ERROR: /usr/sbin/puppetdb-ssl-setup-answers.txt not found"
+    exit 1
+fi
+
+echo -e "\n\n\n" | /usr/sbin/puppetdb-ssl-setup -fi
+
+# Fix permissions
+chmod 640 /etc/puppetdb/ssl/*
+chmod 755 /etc/puppetdb/ssl
+chown puppetdb:puppetdb -R /etc/puppetdb/ssl
+/etc/init.d/puppetdb start
+
+# Block until puppetdb is back up in case we're pointed at it
+echo -e "\nComplete.  Awaiting restart..."
+verify_listener
+echo "PuppetDB listening."
