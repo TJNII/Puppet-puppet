@@ -52,7 +52,10 @@ end
 [agent]
     server=<%= agent_puppetmaster_fqdn %>
 <% if is_master == true and my_independent_agent == true -%>
+
     vardir=/var/lib/puppet
     ssldir = $vardir/ssl
     factpath=$vardir/lib/facter
+
 <% end -%>
+    report = false

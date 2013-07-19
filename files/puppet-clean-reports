@@ -1,0 +1,11 @@
+#!/bin/bash
+# puppet-clean-reports: Clean up /var/lib/puppet/reports, which can grow unchecked
+#
+# No arguments: intended to be dropped in /etc/cron.daily
+#
+# Based off https://groups.google.com/forum/#!topic/puppet-users/q8vWDr3bn4Q
+# 2013 TJNII
+
+RETENTIONDAYS=5
+
+find /var/lib/puppet/reports/ -type f -name "*.yaml" -mtime $RETENTIONDAYS -exec rm {} \;

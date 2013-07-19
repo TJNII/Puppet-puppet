@@ -160,5 +160,12 @@ class puppet::server(
         action => accept,
       }
     }
+
+    file { "/etc/cron.daily/puppet-clean-reports":
+      ensure  => file,
+      source  => "puppet:///modules/puppet/puppet-clean-reports",
+      mode    => 755,
+    }
+
   }
   
