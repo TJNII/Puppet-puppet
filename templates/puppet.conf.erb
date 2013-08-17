@@ -35,6 +35,8 @@ end
     ssldir = $vardir/ssl
     factpath=$vardir/lib/facter
 
+    lastrunfile = /var/lib/puppet/state/last_run_summary.yaml { owner = root, group = root, mode = 0644 }
+
 <% if is_master == true -%>
 [master]
 <%    if my_independent_agent == true -%>

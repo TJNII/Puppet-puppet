@@ -4,7 +4,7 @@ class puppet::common {
   
   # This is redundant, because you can't run this without puppet...
   package { 'puppet':
-    ensure => latest,
+    ensure => installed,
   }
   
   case $operatingsystem {
