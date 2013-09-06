@@ -1,6 +1,6 @@
 class puppet::server(
   $manage_firewall = true,
-  $agent_puppetmaster_fqdn = "puppetmaster.$domain",
+  $agent_puppetmaster_fqdn = "puppetmaster.tjnii.com",
   $independent_agent = false,
   ) {
     class {'puppet::common': }
