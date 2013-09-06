@@ -1,5 +1,5 @@
 class puppet::client (
-  $agent_puppetmaster_fqdn = "puppetmaster.tjnii.com",
+  $agent_puppetmaster_fqdn,
   ) {
     class {'puppet::common': }
     
