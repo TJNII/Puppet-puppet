@@ -12,6 +12,11 @@ class puppet::client (
       require => Package['puppet'],
       content => template("puppet/puppet.conf.erb"),
     }
-    
+
+    # Workaround for bug #20607
+    file { '/var/lib/puppet/state/last_run_summary.yaml':
+      ensure  => file,
+      require => Package['puppet'],
+    }
   }
                           
