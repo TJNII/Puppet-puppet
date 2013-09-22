@@ -59,6 +59,7 @@ echo "CA MISMATCH: $issuer : $1"
 echo "Rebuilding"
 
 /etc/init.d/puppetdb stop
+sleep 5s
 
 if [ -n "`ps awwux | grep "java.*puppetdb.jar" | grep -v grep`" ]; then
     echo "ERROR: Puppetdb processes found after stop"
