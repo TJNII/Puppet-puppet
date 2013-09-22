@@ -36,7 +36,7 @@ fi
 verify_listener
 
 # Determine puppetdb interface
-puppetdb_iface=`netstat -lnp | grep $puppetdb_port | awk '{print $4}'`
+puppetdb_iface=`netstat -lnp | grep $puppetdb_port | awk '{print $4}' | sed -e 's|^::ffff:||'`
 if [ -z "$puppetdb_iface" ]; then
     echo "ERROR: Unable to determine puppetdb interface from netstat. (Port: $puppetdb_port)"
     exit 1
