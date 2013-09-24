@@ -83,7 +83,7 @@ class puppet::server(
         
       }
       debian: {
-        package { ['puppetmaster', 'puppetdb-terminus', 'puppet-el' ]:
+        package { ['puppetmaster', 'puppet-el' ]:
 	  ensure  => installed,
           require => [ File['/usr/sbin/puppetdb-ssl-setup-answers.txt'],
                        File['/etc/puppet/puppet.conf'],
@@ -102,7 +102,7 @@ class puppet::server(
       }
     }
 
-    package { 'puppetdb':
+    package { ['puppetdb', 'puppetdb-terminus']:
       ensure  => installed,
       require => [ File['/usr/sbin/puppetdb-ssl-setup-answers.txt'],
                    File['/etc/puppet/puppet.conf'],
