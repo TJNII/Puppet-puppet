@@ -13,9 +13,9 @@ Server Config
 -------------
 
 The master config will install the puppetlabs repo and ensure the following are configured and running:
-*) puppetmaster
-*) puppetdb
-*) puppet agent
+* puppetmaster
+* puppetdb
+* puppet agent
 
 Multi-master configs
 --------------------
