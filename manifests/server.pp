@@ -182,9 +182,7 @@ class puppet::server(
     }
 
     # Not a true puppet dep, but it will likely be desired on a puppet server.
-    package { 'git':
-      ensure  => installed,
-    }
-
+    include commonpackages::dev::git
+    
   }
   
