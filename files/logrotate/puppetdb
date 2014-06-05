@@ -1,0 +1,14 @@
+#
+# PUPPET MANAGED FILE: DO NOT EDIT
+#
+
+/var/log/puppetdb/puppetdb.log {
+    su root puppetdb	       
+    weekly
+    missingok
+    rotate 12
+    compress
+    copytruncate
+    notifempty
+    create 640  puppetdb puppetdb
+}

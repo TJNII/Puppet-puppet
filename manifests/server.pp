@@ -181,6 +181,19 @@ class puppet::server(
       mode    => 755,
     }
 
+    # Logrotate scripts
+    file { '/etc/logrotate.d/puppet':
+      ensure  => file,
+      source  => "puppet:///modules/puppet/logrotate/puppet",
+      mode    => 644,
+    }
+
+    file { '/etc/logrotate.d/puppetdb':
+      ensure  => file,
+      source  => "puppet:///modules/puppet/logrotate/puppetdb",
+      mode    => 644,
+    }
+
     # Not a true puppet dep, but it will likely be desired on a puppet server.
     include commonpackages::dev::git
     
