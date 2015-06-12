@@ -32,7 +32,7 @@ class puppet::repo {
       file { '/etc/apt/sources.list.d/puppetlabs.list':
         path    => '/etc/apt/sources.list.d/puppetlabs.list',
         ensure  => file,
-        source  => "puppet:///modules/puppet/repo/puppetlabs.list",
+        content => template("puppet/repo/puppetlabs.list.erb"),
       }
       
       file { '/etc/apt/trusted.gpg.d/puppetlabs-keyring.gpg':
