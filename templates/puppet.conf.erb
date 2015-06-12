@@ -25,10 +25,15 @@ end
     # The default value is '$vardir/run'.
     rundir = /var/run/puppet
 
-
+<%
+# Templatedir was provided in the Debian configs but deprecated in 3.6.0
+# Keep in earlier versions for reverse compatibility
+puppet_version_array = puppetversion.split('.')
+if ((puppet_version_array[0].to_i > 3) || ((puppet_version_array[0].to_i >= 3) && (puppet_version_array[1].to_i >= 6))) -%>
     # Settings from the Debian config
     templatedir=$confdir/templates
-    
+
+<% end -%>
     # Enable pluginsync.  Default true on puppet >= 3.0.0
     pluginsync = true
     
